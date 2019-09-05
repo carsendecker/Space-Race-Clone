@@ -6,10 +6,12 @@ public class PlayerController : MonoBehaviour
 {
     public float MoveSpeed;
     public KeyCode UpKey, DownKey;
+
+    private Vector2 startPos;
     
     void Start()
     {
-        
+        startPos = transform.position;
     }
 
     void Update()
@@ -25,6 +27,14 @@ public class PlayerController : MonoBehaviour
             Vector2 pos = transform.position;
             pos.y -= MoveSpeed * Time.deltaTime;
             transform.position = pos;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Star"))
+        {
+            transform.position = startPos;
         }
     }
 }
