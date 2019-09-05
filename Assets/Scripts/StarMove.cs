@@ -22,7 +22,7 @@ public class StarMove : MonoBehaviour
         pos.x += MoveSpeed * Time.deltaTime;
         transform.position = pos;
 
-        if (Math.Abs(transform.position.x - WrapPosition) < 0.05)
+        if (Math.Abs(transform.position.x - WrapPosition) < 0.05) // if transform.position.x == WrapPosition
         {
             pos.x = -WrapPosition;
             transform.position = pos;

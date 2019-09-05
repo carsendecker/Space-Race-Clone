@@ -34,7 +34,18 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Star"))
         {
-            transform.position = startPos;
+            StartCoroutine(DeathDelay());
         }
+    }
+
+    IEnumerator DeathDelay()
+    {
+        Vector2 goAway = startPos;
+        goAway.y -= 50;
+        
+        transform.position = goAway;
+        yield return new WaitForSecondsRealtime(1);
+        transform.position = startPos;
+
     }
 }

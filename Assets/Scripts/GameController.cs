@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     public int player1Score, player2Score;
 
     public TMP_Text p1ScoreText, p2ScoreText;
+    public TMP_Text endText;
     
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,7 @@ public class GameController : MonoBehaviour
         if (timeLimit <= 0)
         {
             Time.timeScale = 0;
+            endText.enabled = true;
         }
 
         if (Input.GetKeyDown(KeyCode.R))
