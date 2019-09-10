@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator StunnedDelay()
     {
         Camera.main.GetComponent<CameraShake>().ShakeCamera(0.7f);
+        rb.velocity = Vector2.zero;
         canMove = false;
         yield return new WaitForSeconds(2);
         canMove = true;
