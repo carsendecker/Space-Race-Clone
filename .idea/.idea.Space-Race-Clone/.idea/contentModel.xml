@@ -7,6 +7,7 @@
         <e p="Scripts" t="Include">
           <e p="GameController.cs" t="Include" />
           <e p="PlayerController.cs" t="Include" />
+          <e p="Spin.cs" t="Include" />
           <e p="StarMove.cs" t="Include" />
         </e>
         <e p="TextMesh Pro" t="Include">
