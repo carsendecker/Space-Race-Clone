@@ -16,14 +16,18 @@ public class PlayerController : MonoBehaviour
     public GameObject BombLive;
     public Image BombIndicator;
 
+    public AudioClip pickupSound, hitSound, shootSound, bombHitSound;
+
     private Vector2 startPos;
     private Rigidbody2D rb;
     private bool canMove = true;
+    private AudioSource aso;
     
     void Start()
     {
         startPos = transform.position;
         rb = GetComponent<Rigidbody2D>();
+        aso = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -67,12 +71,14 @@ public class PlayerController : MonoBehaviour
             Instantiate(DeathParticles, transform.position, transform.rotation);
             StartCoroutine(DeathDelay());
             GameController.GC.SupplyRemove(gameObject);
+            aso.PlayOneShot(hitSound);
         }
         else if (other.CompareTag("Supply"))
         {
             Instantiate(PickupParticles, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
             GameController.GC.SupplyPickup(gameObject);
+            aso.PlayOneShot(pickupSound);
         }
         else if (other.CompareTag("BombPickup"))
         {
@@ -80,17 +86,20 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
             HasBomb = true;
             BombIndicator.color = Color.white;
+            aso.PlayOneShot(pickupSound);
         }
         else if (other.CompareTag("BombLive"))
         {
             Destroy(other.gameObject);
             Instantiate(StunnedParticles, transform.position, Quaternion.identity);
             StartCoroutine(StunnedDelay());
+            aso.PlayOneShot(bombHitSound);
         }
     }
 
     private void FireBomb()
     {
+        aso.PlayOneShot(shootSound);
         Instantiate(BombLive, transform.position, transform.rotation);
         HasBomb = false;
         BombIndicator.color = new Color(0.32f, 0.32f, 0.32f);

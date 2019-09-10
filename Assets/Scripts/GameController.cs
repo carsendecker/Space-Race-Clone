@@ -140,8 +140,14 @@ public class GameController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player 1") || other.CompareTag("Player 2"))
-        {            
-            other.transform.rotation = Quaternion.identity;
+        {
+            StartCoroutine(RespawnDelay(other));
+        }
+    }
+
+    IEnumerator RespawnDelay(Collider2D other)
+    {
+         other.transform.rotation = Quaternion.identity;
             if (other.CompareTag("Player 1"))
             {
                 player1Score += p1Cargo;
@@ -149,6 +155,8 @@ public class GameController : MonoBehaviour
                 p1CargoText.text = p1Cargo + "/6";
                 p1ScoreText.text = player1Score.ToString();
                 
+                other.transform.position = new Vector3(999, 999, 0);
+                yield return new WaitForSeconds(1);
                 other.transform.position = new Vector3(-playerSpawn.x, playerSpawn.y, 0);
             }
             else
@@ -158,8 +166,9 @@ public class GameController : MonoBehaviour
                 p2CargoText.text = p2Cargo + "/6";
                 p2ScoreText.text = player2Score.ToString();
                 
+                other.transform.position = new Vector3(999, 999, 0);
+                yield return new WaitForSeconds(1);
                 other.transform.position = playerSpawn;
             }
-        }
     }
 }
