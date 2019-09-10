@@ -1,17 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public int PlayerNumber;
     public float MaxSpeed;
     public float TurnSpeed;
+    public int SupplyCount;
+    public bool HasBomb;
+    public KeyCode ShootBomb;
 
     public GameObject PickupParticles, StunnedParticles, DeathParticles;
+    public GameObject BombLive;
+    public Image BombIndicator;
 
     private Vector2 startPos;
     private Rigidbody2D rb;
+    private bool canMove = true;
     
     void Start()
     {
@@ -21,11 +28,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        if(canMove)
+            Move();
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(ShootBomb) && HasBomb && canMove)
+        {
+            FireBomb();
+        }   
         
     }
 
@@ -52,16 +64,49 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Star"))
         {
+            Instantiate(DeathParticles, transform.position, transform.rotation);
             StartCoroutine(DeathDelay());
+            GameController.GC.SupplyRemove(gameObject);
         }
         else if (other.CompareTag("Supply"))
         {
+            Instantiate(PickupParticles, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
+            GameController.GC.SupplyPickup(gameObject);
         }
+        else if (other.CompareTag("BombPickup"))
+        {
+            Instantiate(PickupParticles, other.transform.position, Quaternion.identity);
+            Destroy(other.gameObject);
+            HasBomb = true;
+            BombIndicator.color = Color.white;
+        }
+        else if (other.CompareTag("BombLive"))
+        {
+            Destroy(other.gameObject);
+            Instantiate(StunnedParticles, transform.position, Quaternion.identity);
+            StartCoroutine(StunnedDelay());
+        }
+    }
+
+    private void FireBomb()
+    {
+        Instantiate(BombLive, transform.position, transform.rotation);
+        HasBomb = false;
+        BombIndicator.color = new Color(0.32f, 0.32f, 0.32f);
+    }
+
+    IEnumerator StunnedDelay()
+    {
+        Camera.main.GetComponent<CameraShake>().ShakeCamera(0.7f);
+        canMove = false;
+        yield return new WaitForSeconds(2);
+        canMove = true;
     }
 
     IEnumerator DeathDelay()
     {
+        canMove = false;
         Vector2 goAway = startPos;
         goAway.y -= 50;
         
@@ -69,5 +114,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         transform.position = startPos;
         transform.rotation = Quaternion.identity;
+        canMove = true;
     }
 }

@@ -8,6 +8,8 @@ TagManager:
   - Player 2
   - Star
   - Supply
+  - BombPickup
+  - BombLive
   layers:
   - Default
   - TransparentFX
